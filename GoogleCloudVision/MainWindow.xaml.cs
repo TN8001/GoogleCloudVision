@@ -82,7 +82,8 @@ namespace GoogleCloudVision
             var groups = new SortedDictionary<int, List<Word>>();
             foreach(var word in words)
             {
-                var round = (int)Math.Round(word.BoundingBox.Vertices[0].Y / 10.0);
+                var round = (int)Math.Round(word.BoundingBox.Vertices[0].Y / 12.5
+                    );
                 if(groups.ContainsKey(round))
                     groups[round].Add(word);
                 else
@@ -98,7 +99,46 @@ namespace GoogleCloudVision
                 Paragraphs.Add(s.TrimEnd());
             }
 
-            Debug.WriteLine(string.Join("\n", Paragraphs));
+            aa(Paragraphs);
+            //Debug.WriteLine(string.Join("\n", Paragraphs));
+        }
+
+        private void aa(List<string> Paragraphs)
+        {
+            // 商品のとこだけ
+            var n = Paragraphs
+                .SkipWhile(x => !x.Contains("領"))
+                .Skip(1)
+                .TakeWhile(x => !x.Contains("( 商品"));
+
+            var str = "";
+            foreach(var word in n)
+            {
+                if(word.Contains("¥"))
+                    str += word + "¥";
+                else
+                    str += word;
+            }
+
+            var m = str.Split("¥");
+            foreach(var w in m)
+            {
+                Debug.WriteLine(w);
+            }
+            //もち 麦鮭 わかめ むすび
+            // 130
+            //コールスロー サラダ
+            // 203
+            //値 引 額 - 50亀田 ハッピー ターン
+            // 192
+            //7 プレミアム むぎ 茶 600ml
+            // 100
+            //厳選 米 おむすび いくら
+            // 150
+            //銀 しゃり むすび 塩 むすび@ 100x2
+            // 200
+            //冷し とろろ 蕎麦
+            // 430
         }
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
